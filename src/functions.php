@@ -71,6 +71,18 @@ function file_read_csv(
 }
 
 /**
+ * Recursively creates the directory if it does not exist
+ * @param string $dirPath The directory path to create
+ * @throws FilesException
+ */
+function create_directory_if_not_exists(string $dirPath): void
+{
+	if (!file_exists($dirPath)) {
+		mkdir($dirPath, 0777, true);
+	}
+}
+
+/**
  * Write lines to a file. Will create parent directories if they do not exist.
  * @param string $filePath The file to write to
  * @param iterable|string[] $lines
@@ -78,11 +90,7 @@ function file_read_csv(
  */
 function file_write_lines(string $filePath, iterable $lines): void
 {
-    $directory = basename($filePath);
-
-    if (!file_exists($directory)) {
-        mkdir($directory, 0777, true);
-    }
+	create_directory_if_not_exists(basename($filePath));
 
     $stream = fopen($filePath, "w+b");
 
@@ -93,4 +101,34 @@ function file_write_lines(string $filePath, iterable $lines): void
     } finally {
         @fclose($stream);
     }
+}
+
+/**
+ * Write CSV to a file
+ * @param string $filePath Path to the file to write to
+ * @param iterable $rows Each row being an array to write to the file
+ * @param string $separator
+ * @param string $enclosure
+ * @param string $escape
+ * @throws FilesException
+ */
+function file_write_csv(
+	string $filePath,
+	iterable $rows,
+	string $separator = ',',
+	string $enclosure = '"',
+	string $escape = '\\'
+): void
+{
+	create_directory_if_not_exists(basename($filePath));
+
+	$stream = fopen($filePath, "w+b");
+
+	try {
+		foreach ($rows as $row) {
+			fputcsv($stream, $row, $separator, $enclosure, $escape);
+		}
+	} finally {
+		@fclose($stream);
+	}
 }
