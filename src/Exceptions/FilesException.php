@@ -1,11 +1,10 @@
 <?php
 
-namespace Nekman\EsPagination\Exceptions;
+namespace Nekman\Files\Exceptions;
 
 use Exception;
-use Nekman\EsPagination\Contracts\FilesExceptionInterface;
+use Nekman\Files\Contracts\FilesExceptionInterface;
 
 class FilesException extends Exception implements FilesExceptionInterface
 {
-
 }

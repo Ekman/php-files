@@ -5,6 +5,9 @@
 	"license": "MIT",
 	"minimum-stability": "stable",
 	"autoload": {
+		"psr-4": {
+			"Nekman\\Files\\": "src/"
+		},
 		"files": [
 			"src/functions.php"
 		]

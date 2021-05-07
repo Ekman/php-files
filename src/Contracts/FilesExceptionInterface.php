@@ -1,10 +1,9 @@
 <?php
 
-namespace Nekman\EsPagination\Contracts;
+namespace Nekman\Files\Contracts;
 
 use Throwable;
 
 interface FilesExceptionInterface extends Throwable
 {
-
 }

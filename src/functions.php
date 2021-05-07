@@ -2,9 +2,9 @@
 
 namespace Nekman\Files;
 
-use Nekman\EsPagination\Exceptions\FileNotFoundException;
-use Nekman\EsPagination\Exceptions\FileNotReadableException;
-use Nekman\EsPagination\Exceptions\FilesException;
+use Nekman\Files\Exceptions\FileNotFoundException;
+use Nekman\Files\Exceptions\FileNotReadableException;
+use Nekman\Files\Exceptions\FilesException;
 
 /**
  * Ensure that a file exists and is readable
