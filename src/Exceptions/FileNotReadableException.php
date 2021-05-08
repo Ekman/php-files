@@ -1,8 +1,7 @@
 <?php
 
-namespace Nekman\EsPagination\Exceptions;
+namespace Nekman\Files\Exceptions;
 
 class FileNotReadableException extends FilesException
 {
-
 }

@@ -5,12 +5,15 @@
 	"license": "MIT",
 	"minimum-stability": "stable",
 	"autoload": {
+		"psr-4": {
+			"Nekman\\Files\\": "src/"
+		},
 		"files": [
 			"src/functions.php"
 		]
 	},
 	"require": {
-		"php": "^7.4|^8.0"
+		"php": "^7.4||^8.0"
 	},
 	"extra": {
 		"branch-alias": {
