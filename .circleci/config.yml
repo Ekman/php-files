@@ -52,8 +52,7 @@ workflows:
           filters:
             branches:
               ignore: master
-      - test_coverage:
-          requires: [ php-cs-fixer/fix ]
+      - test_coverage
       - phpunit/test:
           test-path: tests
           matrix:
@@ -61,4 +60,3 @@ workflows:
               executor:
                 - php80
           pre-steps: [ composer/install_bin ]
-          requires: [ php-cs-fixer/fix ]
