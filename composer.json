@@ -15,9 +15,20 @@
 	"require": {
 		"php": "^7.4||^8.0"
 	},
+	"require-dev": {
+		"friendsofphp/php-cs-fixer": "^3.0",
+		"phpunit/phpunit": "^9.5"
+	},
+	"scripts": {
+		"test": "phpunit tests",
+		"lint": "php-cs-fixer fix --rules=@PSR2 ."
+	},
+	"config": {
+		"sort-packages": true
+	},
 	"extra": {
 		"branch-alias": {
-			"dev-master": "0.0.x-dev"
+			"dev-master": "1.x-dev"
 		}
 	}
 }
