@@ -11,6 +11,7 @@ use Nekman\Files\Exceptions\FilesException;
  * @param string $filePath The file to check
  * @throws FileNotFoundException If the file could not be found
  * @throws FileNotReadableException If the file is not readable
+ * @throws FilesException
  */
 function ensure_file_exists_and_readable(string $filePath): void
 {
@@ -39,7 +40,7 @@ function file_read_lines(string $filePath): iterable
 
     try {
         while ($line = fgets($stream)) {
-            yield $line;
+            yield trim($line);
         }
     } finally {
         @fclose($stream);
@@ -48,8 +49,9 @@ function file_read_lines(string $filePath): iterable
 
 /**
  * Read CSV rows from a file
- * @throws FileNotReadableException
- * @throws FileNotFoundException
+ * @throws FileNotReadableException If the file is not readable
+ * @throws FileNotFoundException If the file does not exist
+ * @throws FilesException
  */
 function file_read_csv(
     string $csvPath,
@@ -77,9 +79,9 @@ function file_read_csv(
  */
 function create_directory_if_not_exists(string $dirPath): void
 {
-	if (!file_exists($dirPath)) {
-		mkdir($dirPath, 0777, true);
-	}
+    if (!file_exists($dirPath)) {
+        mkdir($dirPath, 0777, true);
+    }
 }
 
 /**
@@ -90,7 +92,7 @@ function create_directory_if_not_exists(string $dirPath): void
  */
 function file_write_lines(string $filePath, iterable $lines): void
 {
-	create_directory_if_not_exists(basename($filePath));
+    create_directory_if_not_exists(basename($filePath));
 
     $stream = fopen($filePath, "w+b");
 
@@ -113,22 +115,21 @@ function file_write_lines(string $filePath, iterable $lines): void
  * @throws FilesException
  */
 function file_write_csv(
-	string $filePath,
-	iterable $rows,
-	string $separator = ',',
-	string $enclosure = '"',
-	string $escape = '\\'
-): void
-{
-	create_directory_if_not_exists(basename($filePath));
+    string $filePath,
+    iterable $rows,
+    string $separator = ',',
+    string $enclosure = '"',
+    string $escape = '\\'
+): void {
+    create_directory_if_not_exists(basename($filePath));
 
-	$stream = fopen($filePath, "w+b");
+    $stream = fopen($filePath, "w+b");
 
-	try {
-		foreach ($rows as $row) {
-			fputcsv($stream, $row, $separator, $enclosure, $escape);
-		}
-	} finally {
-		@fclose($stream);
-	}
+    try {
+        foreach ($rows as $row) {
+            fputcsv($stream, $row, $separator, $enclosure, $escape);
+        }
+    } finally {
+        @fclose($stream);
+    }
 }
