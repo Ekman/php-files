@@ -26,7 +26,7 @@ jobs:
           name: Install PCOV and git
           command: |-
             apk add --update --no-cache ${PHPIZE_DEPS} git
-            yes | pecl install pcov-1.0.6
+            pecl install pcov-1.0.6
             docker-php-ext-enable pcov
       - checkout
       - composer/install_bin
