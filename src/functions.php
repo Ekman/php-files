@@ -146,7 +146,7 @@ function file_write_csv(
     string $enclosure = '"',
     string $escape = '\\'
 ): void {
-    create_directory_if_not_exists(basename($filePath));
+    create_directory_if_not_exists(dirname($filePath));
 
     $stream = fopen($filePath, "w+b");
 
