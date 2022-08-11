@@ -8,10 +8,24 @@ use function Nekman\Files\file_read_csv;
 use function Nekman\Files\file_read_lines;
 use function Nekman\Files\file_write_csv;
 use function Nekman\Files\file_write_lines;
+use function Nekman\Files\list_files;
 
 class FunctionsTest extends TestCase
 {
     private string $testFile;
+
+    public function test_create_directory_if_not_exists(): void
+    {
+        $dir = sys_get_temp_dir() . uniqid();
+        $this->assertFileDoesNotExist($dir);
+
+        create_directory_if_not_exists($dir);
+        $this->assertFileExists($dir);
+
+        // Test calling the directory again, everything should remain the same
+        create_directory_if_not_exists($dir);
+        $this->assertFileExists($dir);
+    }
 
     public function test_ensure_file_exists_and_readable(): void
     {
@@ -42,25 +56,20 @@ class FunctionsTest extends TestCase
         return $array;
     }
 
-    public function test_read_csv(): void
+    public function test_file_write_csv(): void
     {
+        $expected = [["x", "y"], ["z", "a"]];
+
+        $file = sys_get_temp_dir() . uniqid();
+        $this->assertFileDoesNotExist($file);
+
+        file_write_csv($file, $expected);
+        $this->assertFileExists($file);
+
         $this->assertEquals(
-            [["foo", "bar"], ["hello", "world"]],
-            $this->iterable_to_array(file_read_csv($this->testFile))
+            $expected,
+            $this->iterable_to_array(file_read_csv($file))
         );
-    }
-
-    public function test_create_directory_if_not_exists(): void
-    {
-        $dir = sys_get_temp_dir() . uniqid();
-        $this->assertFileDoesNotExist($dir);
-
-        create_directory_if_not_exists($dir);
-        $this->assertFileExists($dir);
-
-        // Test calling the directory again, everything should remain the same
-        create_directory_if_not_exists($dir);
-        $this->assertFileExists($dir);
     }
 
     public function test_file_write_lines(): void
@@ -79,19 +88,27 @@ class FunctionsTest extends TestCase
         );
     }
 
-    public function test_file_write_csv(): void
+    public function test_list_files(): void
     {
-        $expected = [["x", "y"], ["z", "a"]];
-
-        $file = sys_get_temp_dir() . uniqid();
-        $this->assertFileDoesNotExist($file);
-
-        file_write_csv($file, $expected);
-        $this->assertFileExists($file);
+        $files = iterator_to_array(list_files(__DIR__ . "/test_dir"));
 
         $this->assertEquals(
-            $expected,
-            $this->iterable_to_array(file_read_csv($file))
+            array_map(
+                fn (string $path) => str_replace("/", DIRECTORY_SEPARATOR, $path),
+                [
+                    __DIR__ . "/test_dir/bar",
+                    __DIR__ . "/test_dir/test_dir_2/foo",
+                ]
+            ),
+            $files
+        );
+    }
+
+    public function test_read_csv(): void
+    {
+        $this->assertEquals(
+            [["foo", "bar"], ["hello", "world"]],
+            $this->iterable_to_array(file_read_csv($this->testFile))
         );
     }
 
