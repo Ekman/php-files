@@ -30,6 +30,9 @@ namespace Nekman\Files;
 use Nekman\Files\Exceptions\FileNotFoundException;
 use Nekman\Files\Exceptions\FileNotReadableException;
 use Nekman\Files\Exceptions\FilesException;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use SplFileInfo;
 
 /**
  * Ensure that a file exists and is readable
@@ -140,11 +143,11 @@ function file_write_lines(string $filePath, iterable $lines): void
  * @throws FilesException
  */
 function file_write_csv(
-    string $filePath,
+    string   $filePath,
     iterable $rows,
-    string $separator = ',',
-    string $enclosure = '"',
-    string $escape = '\\'
+    string   $separator = ',',
+    string   $enclosure = '"',
+    string   $escape = '\\'
 ): void {
     create_directory_if_not_exists(dirname($filePath));
 
@@ -156,5 +159,25 @@ function file_write_csv(
         }
     } finally {
         @fclose($stream);
+    }
+}
+
+/**
+ * List all files in a directory.
+ * @param string $dir The directory to list files from.
+ * @param bool $recursively Recursively check sub folders. Defaults to true.
+ * @return string[] An absolute path to all files in the directory.
+ */
+function list_files(string $dir, bool $recursively = true): iterable
+{
+    $iterator = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($dir)
+    );
+
+    /** @var SplFileInfo $file */
+    foreach ($iterator as $file) {
+        if (!$file->isDir() && $realpath = $file->getRealPath()) {
+            yield $realpath;
+        }
     }
 }
