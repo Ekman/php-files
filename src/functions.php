@@ -165,10 +165,9 @@ function file_write_csv(
 /**
  * List all files in a directory.
  * @param string $dir The directory to list files from.
- * @param bool $recursively Recursively check sub folders. Defaults to true.
  * @return string[] An absolute path to all files in the directory.
  */
-function list_files(string $dir, bool $recursively = true): iterable
+function list_files(string $dir): iterable
 {
     $iterator = new RecursiveIteratorIterator(
         new RecursiveDirectoryIterator($dir)
